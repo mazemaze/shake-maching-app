@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: 'sample-mysql-db'
+    expose:
+      - '3306'
+    ports:
+      - 3306:3306
+    restart: 'always'
+    volumes:
+      - db-store:/var/lib/mysql
+      - ./conf/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - app-net
+
+  backend:
+    container_name: backend
+    build: .
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/go/src/app
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    networks:
+      - app-net
+volumes:
+  db-store:
+
+networks:
+  app-net:
+    driver: bridge

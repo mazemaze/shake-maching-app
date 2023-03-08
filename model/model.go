@@ -1,32 +1,30 @@
 package model
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
 type User struct {
-	Id        string    `json:"id"`
-	Username  string    `json"username"`
-	Password  string    `json"password"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	gorm.Model
+	Username string `gorm:"unique" json"username"`
+	Password string `json"password"`
 }
 
 type ChatRoom struct {
-	Id        string `json:"id"`
-	User1     string `json:"user_1"`
-	User2     string `json:"user_2"`
-	CreatedAt string `json:"created_at"`
+	gorm.Model
+	User1 string `json:"user_1"`
+	User2 string `json:"user_2"`
 }
 
 type ChatContent struct {
-	Id        string `json:"id"`
-	RoomId    string `json:"room_id"`
-	UserId    string `json:"user_id"`
-	Content   string `json:"content"`
-	CreatedAt string `json:"created_at"`
+	gorm.Model
+	RoomId  string `json:"room_id"`
+	UserId  string `json:"user_id"`
+	Content string `json:"content"`
 }
 
 type Score struct {
-	Id     string `json:"id"`
+	gorm.Model
 	RoomId string `json:"room_id"`
 	UserId string `json:"user_id"`
 	Score  int64  `json:"score"`

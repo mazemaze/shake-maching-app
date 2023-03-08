@@ -10,7 +10,7 @@ services:
     expose:
       - '3306'
     ports:
-      - 3306:3306
+      - 4306:3306
     restart: 'always'
     volumes:
       - db-store:/var/lib/mysql

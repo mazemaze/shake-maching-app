@@ -1,15 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"net/url"
 	"shakashaka/model"
+	"shakashaka/router"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"gorm.io/gorm"
 )
 
 var wsupgrader = websocket.Upgrader{
@@ -37,41 +37,30 @@ func wshandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	fmt.Println("Hi")
 
-	r := gin.Default()
+	db := router.DBInit()
 
-	api := r.Group("/api")
+	err := migration(db)
 
-	authrized := api.Group("/admin", gin.BasicAuth(gin.Accounts{
-		"foo": "test",
-	}))
+	if err != nil {
+		panic("Failed to migrate database")
+	}
+	router := router.Router()
 
-	authrized.GET("/secrets", func(ctx *gin.Context) {
+	router.Run(":8080")
+}
 
-		ctx.JSON(http.StatusOK, "Hi!")
-
-	})
-
-	api.GET("/registration", func(r *gin.Context) {
-
-	})
-
-	api.GET("/ws", func(c *gin.Context) {
-		wshandler(c.Writer, c.Request)
-	})
-	go clientStart()
-
-	api.POST("/chatroom", func(c *gin.Context) {
-		var chatRoom *model.ChatRoom
-		err := c.BindJSON(&chatRoom)
-		if err != nil {
-			log.Fatalln("Failed to parse the json: " + err.Error())
-			return
-		}
-	})
-
-	r.Run(":8080")
+func migration(db *gorm.DB) error {
+	err := db.AutoMigrate(
+		&model.ChatContent{},
+		&model.ChatRoom{},
+		&model.Score{},
+		&model.User{},
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func clientStart() {

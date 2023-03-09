@@ -8,6 +8,7 @@ func Router() *gin.Engine {
 	api := r.Group("/api")
 
 	api.GET("/user/:id", userInfoHandler)
+	api.PUT("/user", updateUserInfoHandler)
 	api.POST("/user/login", loginHandler)
 	api.POST("/user/registration", registrationHandler)
 

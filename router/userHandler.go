@@ -20,7 +20,25 @@ func userInfoHandler(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, err)
 		return
 	}
-	ctx.JSON(http.StatusOK, &user)
+	ctx.JSON(http.StatusOK, user)
+}
+
+func updateUserInfoHandler(ctx *gin.Context) {
+	var user model.User
+	db := DBInit()
+	err := db.Save(&user).Error
+	if err != nil {
+		log.Println("Failed to process userinfo update")
+		ctx.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	err = db.Where("id = ?", user.ID).First(&user).Error
+	if err != nil {
+		log.Println("Failed to process userInfo get")
+		ctx.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusOK, user)
 }
 
 func registrationHandler(ctx *gin.Context) {

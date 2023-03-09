@@ -14,13 +14,13 @@ import (
 func userInfoHandler(ctx *gin.Context) {
 	id := ctx.Param("id")
 	var user model.User
-	db := DBInit().Begin()
+	db := DBInit()
 	err := db.First(&user, "id = ?", id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		ctx.JSON(http.StatusBadRequest, err)
 		return
 	}
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, &user)
 }
 
 func registrationHandler(ctx *gin.Context) {
@@ -52,7 +52,7 @@ func loginHandler(ctx *gin.Context) {
 		return
 	}
 	var user model.User
-	db := DBInit().Begin()
+	db := DBInit()
 	err = db.Where("username = ?", request.Username).Where("password = ?", request.Password).First(&user).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		log.Fatal(err)

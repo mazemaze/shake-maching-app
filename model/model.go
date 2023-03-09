@@ -12,8 +12,9 @@ type User struct {
 
 type ChatRoom struct {
 	gorm.Model
-	User1 string `json:"user_1"`
-	User2 string `json:"user_2"`
+	User1  string `json:"user_1"`
+	User2  string `json:"user_2"`
+	Status int    `json:"status"`
 }
 
 type ChatContent struct {

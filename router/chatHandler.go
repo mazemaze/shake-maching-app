@@ -9,12 +9,12 @@ import (
 
 func createChatHandler(ctx *gin.Context) {
 	var content model.ChatContent
-	_ = ctx.Param("id")
 	err := ctx.BindJSON(content)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
+
 	ctx.JSON(http.StatusOK, gin.H{"result": true})
 }
 

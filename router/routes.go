@@ -13,8 +13,10 @@ func Router() *gin.Engine {
 
 	api.POST("/chat_room", createChatRoomHandler)
 	api.GET("/chat_room/:id", chatRoomInfoHanlder)
+	api.PUT("/chat_room/:id", updateChatRoomStatus)
 
-	api.POST("/chat_room/:id", createChatHandler)
+	api.POST("/chat_room/chats", createChatHandler)
 	api.GET("/chat_room/:id/chats", getChatByRoomID)
+
 	return r
 }
